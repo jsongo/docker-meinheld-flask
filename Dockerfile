@@ -10,10 +10,9 @@ RUN apt-get install -y supervisor
 RUN easy_install pip
 
 RUN apt-get install -y build-essential
-RUN apt-get install -y libmysqld-dev
+RUN apt-get install -y libffi-dev libssl-dev libssl-dev
 RUN pip install -U meinheld gunicorn
 
-RUN apt-get install -y libffi-dev
 ADD requirements.txt /home/docker/code/
 RUN pip install -r /home/docker/code/requirements.txt
 
