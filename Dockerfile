@@ -13,7 +13,7 @@ RUN apt-get install -y build-essential
 RUN apt-get install -y libmysqld-dev
 RUN pip install -U meinheld gunicorn
 
-RUN apt-get install libffi-dev
+RUN apt-get install -y libffi-dev
 ADD requirements.txt /home/docker/code/
 RUN pip install -r /home/docker/code/requirements.txt
 
