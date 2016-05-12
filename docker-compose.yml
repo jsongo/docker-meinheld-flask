@@ -1,8 +1,64 @@
-uwsgi-django:
-  image: meinheld 
-  container_name: meinheld
-  net: "host"
-  environment:
-    APP_NAME: accessToken 
+gunicorn-meinheld-flask:
+  image: daocloud.io/jsongo/docker-meinheld-flask:latest 
+  container_name: gunicorn-meinheld-flask
+  restart: always
+  ports: 
+    - 8001:8001
   volumes:
-   - /data/code/accessToken:/home/docker/code/app
+    - /data/code/pyball:/home/docker/code/app
+  links:
+    - mysql
+gunicorn-meinheld-flask1:
+  image: daocloud.io/jsongo/docker-meinheld-flask:latest 
+  container_name: gunicorn-meinheld-flask1
+  restart: always
+  ports: 
+    - 8002:8001
+  volumes:
+    - /data/code/pyball:/home/docker/code/app
+  links:
+    - mysql
+gunicorn-meinheld-flask2:
+  image: daocloud.io/jsongo/docker-meinheld-flask:latest 
+  container_name: gunicorn-meinheld-flask2
+  restart: always
+  ports: 
+    - 8003:8001
+  volumes:
+    - /data/code/pyball:/home/docker/code/app
+  links:
+    - mysql
+gunicorn-meinheld-flask3:
+  image: daocloud.io/jsongo/docker-meinheld-flask:latest 
+  container_name: gunicorn-meinheld-flask3
+  restart: always
+  ports: 
+    - 8004:8001
+  volumes:
+    - /data/code/pyball:/home/docker/code/app
+  links:
+    - mysql
+mysql:
+  image: mysql:latest
+  container_name: mysql
+  restart: always
+  ports: 
+    - 3306:3306
+  volumes:
+    - /data/mysql/data:/var/lib/mysql
+  environment:
+    MYSQL_ROOT_PASSWORD: 9MReQipA2JisT9 
+
+haproxy:
+  image: daocloud.io/haproxy
+  container_name: haproxy-live
+  ports: 
+      - 8080:8080
+  restart: always
+  volumes:
+        - ./haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
+  links:
+    - gunicorn-meinheld-flask:flask1
+    - gunicorn-meinheld-flask1:flask2
+    - gunicorn-meinheld-flask2:flask3
+    - gunicorn-meinheld-flask3:flask4
